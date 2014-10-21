@@ -22,7 +22,10 @@
                         document.getElementById("mnth"),
                         document.getElementById("ampm")
                     ];
+
                 // Custom Attribute
+                // This function draws the arcs
+                /*
                 r.customAttributes.arc = function (value, total, R) {
                     var alpha = 360 / total * value,
                         a = (90 - alpha) * Math.PI / 180,
@@ -36,8 +39,9 @@
                         path = [["M", 300, 300 - R], ["A", R, R, 0, +(alpha > 180), 1, x, y]];
                     }
                     return {path: path, stroke: color};
-                };
+                };*/
 
+                
                 drawMarks(R, 60);
                 var sec = r.path().attr(param).attr({arc: [0, 60, R]});
                 R -= 40;
@@ -52,8 +56,11 @@
                 R -= 40;
                 drawMarks(R, 12);
                 var mon = r.path().attr(param).attr({arc: [0, 12, R]});
+                
+                // The line below draws the central circle
                 var pm = r.circle(300, 300, 16).attr({stroke: "none", fill: Raphael.hsb2rgb(15 / 200, 1, .75).hex});
                 html[5].style.color = Raphael.hsb2rgb(15 / 200, 1, .75).hex;
+            
 
                 function updateVal(value, total, R, hand, id) {
                     if (total == 31) { // month
@@ -116,6 +123,7 @@
                 })();
             };
         </script>
+
         <style media="screen">
             #holder {
                 height: 600px;
