@@ -38,6 +38,7 @@
                     return {path: path, stroke: color};
                 };
 
+                // drawMarks makes the dotted marks
                 drawMarks(R, 60);
                 var sec = r.path().attr(param).attr({arc: [0, 60, R]});
                 R -= 40;
@@ -56,6 +57,8 @@
                 html[5].style.color = Raphael.hsb2rgb(15 / 200, 1, .75).hex;
 
                 function updateVal(value, total, R, hand, id) {
+                    
+                    
                     if (total == 31) { // month
                         var d = new Date;
                         d.setDate(1);
@@ -76,6 +79,12 @@
                             hand.animate({arc: [value, total, R]}, 750, "elastic");
                         }
                     }
+
+                    // PRS Correction so that hour, minute and second never show 60
+                    if (id <= 2 && value == 60) {
+                        value = 0;
+                        }
+
                     html[id].innerHTML = (value < 10 ? "0" : "") + value;
                     html[id].style.color = Raphael.getRGB(color).hex;
                 }
