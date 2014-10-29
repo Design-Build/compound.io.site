@@ -67,10 +67,21 @@
                         total = d.getDate();
                     }
                     var color = "hsb(".concat(Math.round(R) / 200, ",", value / total, ", .75)");
+
                     if (init) {
                         hand.animate({arc: [value, total, R]}, 900, ">");
                     } else {
-                        if (!value || value == total) {
+
+                        // Original condition: (!value || value == total)
+                        // if !value evaluates to false when value is 0
+                        // In this case, the hour should never = 0, nor should we redraw when value == total
+                        // if we do, we'll be redrawing with every update when hour == 12
+                        // Likewise, the minute hand should equal zero, but should not redraw when it's equal to zero, otherwise,
+                        // it will redraw for the entire first minute of every hour.
+                        // The digits of the second hand should never == 60 (handled below) but it can redraw on 00 without
+                        // adverse consequence. 
+
+                        if ((!value && id != 1) || (value == total && id != 0)) {
                             value = total;
                             hand.animate({arc: [value, total, R]}, 750, "bounce", function () {
                                 hand.attr({arc: [0, total, R]});
@@ -80,14 +91,19 @@
                         }
                     }
 
-                    // PRS Correction so that hour, minute and second never show 60
-                    if (id <= 2 && value == 60) {
+                    // PRS Correction so that minute and second never show 60
+                    if ((id == 1 || id == 2) && value == 60) {
                         value = 0;
                         }
 
                     html[id].innerHTML = (value < 10 ? "0" : "") + value;
                     html[id].style.color = Raphael.getRGB(color).hex;
                 }
+
+                // *******
+                // Note - minute hand still malfunctioning @ ex. 1:00:..
+                // *******
+
 
                 function drawMarks(R, total) {
                     if (total == 31) { // month
